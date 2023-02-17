@@ -22,46 +22,39 @@ namespace HighlightSearchResults
                 searchParameters.CaseSensitive = true;
                 searchParameters.WholeWords = true;
 
-
-                //Comment the following "using" statement if you use annotations
-                using (var brush = new SolidBrush(Color.FromArgb(130, 55, 155, 255)))
-                    foreach (string word in words)
+                foreach (string word in words) 
+                {
+                    PdfTextSearchResults result;
+                    //Get the search results from the FindText method call with search text and search parameters
+                    while ((result = documentProcessor.FindText(word, searchParameters)).Status == PdfTextSearchStatus.Found) 
                     {
-                        //Get the search results from the FindText method call with search text and search parameters
-                        PdfTextSearchResults result = documentProcessor.FindText(word, searchParameters);
-
-                        //Highlight the result
-                        while (result.Status == PdfTextSearchStatus.Found)
-                        {
-                            using (PdfGraphics graphics = documentProcessor.CreateGraphics())
-                            {
-                                HighlightResult(graphics, result, brush);
-                            }
-                            //Use this method call to add annotations:
-                            //HighlightResult(documentProcessor, result);
-                            result = documentProcessor.FindText(word, searchParameters);
-                        }
+                        //HighlightResultWithGraphics(documentProcessor, result);
+                        HighlightResultUsingAnnotations(documentProcessor, result);
                     }
+                }
                 //Save the document
                 documentProcessor.SaveDocument(@"..\..\Result.pdf");
             }
         }
 
         //This method uses PdfGraphics to highlight text
-        public static void HighlightResult(PdfGraphics graphics, PdfTextSearchResults result, SolidBrush brush)
+        static void HighlightResultWithGraphics(PdfDocumentProcessor processor, PdfTextSearchResults result)
         {
-            for (int i = 0; i < result.Rectangles.Count; i++)
+            using (PdfGraphics graphics = processor.CreateGraphics()) 
             {
-                RectangleF rect = new RectangleF(new PointF((float)result.Rectangles[i].Left, (float)result.Page.CropBox.Height - (float)result.Rectangles[i].Top),
-                    new SizeF((float)result.Rectangles[i].Width, (float)result.Rectangles[i].Height));
-
-                graphics.FillRectangle(brush, rect);
+                for (int i = 0; i < result.Rectangles.Count; i++)
+                {
+                    RectangleF rect = new RectangleF(new PointF((float)result.Rectangles[i].Left, (float)result.Page.CropBox.Height - (float)result.Rectangles[i].Top),
+                        new SizeF((float)result.Rectangles[i].Width, (float)result.Rectangles[i].Height));
+                    using (var brush = new SolidBrush(Color.FromArgb(130, 55, 155, 255)))
+                        graphics.FillRectangle(brush, rect);
+                }
+                graphics.AddToPageForeground(result.Page, 72, 72);
             }
-            graphics.AddToPageForeground(result.Page, 72, 72);
         }
 
         //This method uses annotations to highlight text
-        public static void HighlightResult(PdfDocumentProcessor processor, PdfTextSearchResults result)
+        static void HighlightResultUsingAnnotations(PdfDocumentProcessor processor, PdfTextSearchResults result)
         {
             for (int i = 0; i < result.Rectangles.Count; i++)
             {
