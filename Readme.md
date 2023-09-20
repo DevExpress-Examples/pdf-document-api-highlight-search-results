@@ -3,16 +3,13 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T568675)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-<!-- default file list -->
-*Files to look at*:
 
-* [Program.cs](./CS/HighlightSearchResults/Program.cs) (VB: [Program.vb](./VB/HighlightSearchResults/Program.vb))
-<!-- default file list end -->
 # PDF Document API - Highlight Search Results in a Document
 
+This example shows how to highlight search results in a document by drawing filled rectangles that correspond to the document area containing found text.
 
-This example shows how to highlight search results in a document by drawing filled rectangles that correspond to the document area containing found text. <br><br>
+# Files to Review
 
-<br/>
+* [Program.cs](./CS/HighlightSearchResults/Program.cs) (VB: [Program.vb](./VB/HighlightSearchResults/Program.vb))
 
 
