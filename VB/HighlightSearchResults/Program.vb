@@ -36,15 +36,15 @@ Namespace HighlightSearchResults
 
         'This method uses PdfGraphics to highlight text
         Private Shared Sub HighlightResultWithGraphics(ByVal processor As PdfDocumentProcessor, ByVal result As PdfTextSearchResults)
-            Using graphics As PdfGraphics = processor.CreateGraphics()
+            Using graphics As PdfGraphics = processor.CreateGraphicsPageSystem()
                 For i As Integer = 0 To result.Rectangles.Count - 1
-                    Dim rect As New RectangleF(New PointF(CSng(result.Rectangles(i).Left), CSng(result.Page.CropBox.Height - result.Rectangles(i).Top)),
+                    Dim rect As New RectangleF(New PointF(CSng(result.Rectangles(i).Left), CSng(result.Rectangles(i).Top - result.Rectangles(i).Height)),
                         New SizeF(CSng(result.Rectangles(i).Width), CSng(result.Rectangles(i).Height)))
                     Using brush = New DXSolidBrush(Color.FromArgb(130, 55, 155, 255))
                         graphics.FillRectangle(brush, rect)
                     End Using
                 Next
-                graphics.AddToPageForeground(result.Page, 72, 72)
+                graphics.AddToPageForeground(result.Page)
             End Using
         End Sub
 

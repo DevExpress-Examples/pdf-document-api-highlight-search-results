@@ -43,16 +43,16 @@ namespace HighlightSearchResults
         //This method uses PdfGraphics to highlight text
         static void HighlightResultWithGraphics(PdfDocumentProcessor processor, PdfTextSearchResults result)
         {
-            using (PdfGraphics graphics = processor.CreateGraphics())
+            using (PdfGraphics graphics = processor.CreateGraphicsPageSystem())
             {
                 for (int i = 0; i < result.Rectangles.Count; i++)
                 {
-                    RectangleF rect = new RectangleF(new PointF((float)result.Rectangles[i].Left, (float)result.Page.CropBox.Height - (float)result.Rectangles[i].Top),
+                    RectangleF rect = new RectangleF(new PointF((float)result.Rectangles[i].Left, (float)result.Rectangles[i].Top- (float)result.Rectangles[i].Height),
                         new SizeF((float)result.Rectangles[i].Width, (float)result.Rectangles[i].Height));
                     using (var brush = new DXSolidBrush(Color.FromArgb(130, 55, 155, 255)))
                         graphics.FillRectangle(brush, rect);
                 }
-                graphics.AddToPageForeground(result.Page, 72, 72);
+                graphics.AddToPageForeground(result.Page);
             }
         }
 
@@ -74,5 +74,3 @@ namespace HighlightSearchResults
         }
     }
 }
-
-
