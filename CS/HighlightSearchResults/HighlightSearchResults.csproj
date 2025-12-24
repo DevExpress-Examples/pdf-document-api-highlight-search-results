@@ -6,6 +6,9 @@
     <AssemblyName>HighlightSearchResult</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Document.Processor" Version="25.2.3" />
 	  <PackageReference Include="DevExpress.Drawing.Skia" Version="25.2.3" />
