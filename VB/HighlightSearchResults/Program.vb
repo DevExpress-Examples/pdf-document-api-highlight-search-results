@@ -4,28 +4,27 @@ Imports System.Diagnostics
 Imports System.Drawing
 
 Namespace HighlightSearchResults
-    Class Program
+
+    Friend Class Program
+
         Shared Sub Main(ByVal args As String())
             'Create a PDF document processor.
-            Using documentProcessor As New PdfDocumentProcessor()
+            Using documentProcessor As PdfDocumentProcessor = New PdfDocumentProcessor()
                 'Define search words
                 Dim words As String() = {"Get", "DX-RX809", "HD", "DX-B5000"}
-
                 'Load a PDF document
                 documentProcessor.LoadDocument("..\..\..\Document.pdf")
-
                 'Specify the search parameters
-                Dim searchParameters As New PdfTextSearchParameters()
+                Dim searchParameters As PdfTextSearchParameters = New PdfTextSearchParameters()
                 searchParameters.CaseSensitive = True
                 searchParameters.WholeWords = True
-
                 For Each word As String In words
                     Dim result As PdfTextSearchResults
                     'Get the search results from the FindText method call with search text and search parameters
-                    Do While InlineAssignHelper(result, documentProcessor.FindText(word, searchParameters)).Status = PdfTextSearchStatus.Found
-                        'HighlightResultWithGraphics(documentProcessor, result)
+                    While CSharpImpl.__Assign(result, documentProcessor.FindText(word, searchParameters)).Status Is PdfTextSearchStatus.Found
+                        'HighlightResultWithGraphics(documentProcessor, result);
                         HighlightResultWithAnnotations(documentProcessor, result)
-                    Loop
+                    End While
                 Next
 
                 'Save the document
@@ -38,12 +37,12 @@ Namespace HighlightSearchResults
         Private Shared Sub HighlightResultWithGraphics(ByVal processor As PdfDocumentProcessor, ByVal result As PdfTextSearchResults)
             Using graphics As PdfGraphics = processor.CreateGraphics()
                 For i As Integer = 0 To result.Rectangles.Count - 1
-                    Dim rect As New RectangleF(New PointF(CSng(result.Rectangles(i).Left), CSng(result.Page.CropBox.Height - result.Rectangles(i).Top)),
-                        New SizeF(CSng(result.Rectangles(i).Width), CSng(result.Rectangles(i).Height)))
+                    Dim rect As RectangleF = New RectangleF(New PointF(CSng(result.Rectangles(i).Left), CSng(result.Page.CropBox.Height) - CSng(result.Rectangles(i).Top)), New SizeF(CSng(result.Rectangles(i).Width), CSng(result.Rectangles(i).Height)))
                     Using brush = New DXSolidBrush(Color.FromArgb(130, 55, 155, 255))
                         graphics.FillRectangle(brush, rect)
                     End Using
                 Next
+
                 graphics.AddToPageForeground(result.Page, 72, 72)
             End Using
         End Sub
@@ -52,7 +51,6 @@ Namespace HighlightSearchResults
         Private Shared Sub HighlightResultWithAnnotations(ByVal processor As PdfDocumentProcessor, ByVal result As PdfTextSearchResults)
             Dim facade As PdfDocumentFacade = processor.DocumentFacade
             Dim page As PdfPageFacade = facade.Pages(result.Page.GetPageIndex())
-
             For i As Integer = 0 To result.Rectangles.Count - 1
                 Dim annotation As PdfTextMarkupAnnotationFacade = page.AddTextMarkupAnnotation(result.Rectangles(i), PdfTextMarkupAnnotationType.Highlight)
                 If annotation IsNot Nothing Then
@@ -61,10 +59,13 @@ Namespace HighlightSearchResults
             Next
         End Sub
 
-        'Helper function to assign and return value in Do While loop
-        Private Shared Function InlineAssignHelper(Of T)(ByRef target As T, ByVal value As T) As T
-            target = value
-            Return value
-        End Function
+        Private Class CSharpImpl
+
+            <System.Obsolete("Please refactor calling code to use normal Visual Basic assignment")>
+            Shared Function __Assign(Of T)(ByRef target As T, value As T) As T
+                target = value
+                Return value
+            End Function
+        End Class
     End Class
 End Namespace
