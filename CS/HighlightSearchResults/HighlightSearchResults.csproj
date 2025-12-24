@@ -10,9 +10,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="DevExpress.Document.Processor" Version="24.2.5" />
-	  <PackageReference Include="DevExpress.Drawing.Skia" Version="24.2.5" />
+    <PackageReference Include="DevExpress.Document.Processor" Version="24.2.*" />
+	  <PackageReference Include="DevExpress.Drawing.Skia" Version="24.2.*" />
   </ItemGroup>
 </Project>
