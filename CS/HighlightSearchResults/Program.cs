@@ -43,17 +43,16 @@ namespace HighlightSearchResults
         //This method uses PdfGraphics to highlight text
         static void HighlightResultWithGraphics(PdfDocumentProcessor processor, PdfTextSearchResults result)
         {
-            using (PdfGraphics graphics = processor.CreateGraphicsPageSystem())
-            {
-                for (int i = 0; i < result.Rectangles.Count; i++)
-                {
-                    RectangleF rect = new RectangleF(new PointF((float)result.Rectangles[i].Left, (float)result.Rectangles[i].Top- (float)result.Rectangles[i].Height),
-                        new SizeF((float)result.Rectangles[i].Width, (float)result.Rectangles[i].Height));
-                    using (var brush = new DXSolidBrush(Color.FromArgb(130, 55, 155, 255)))
-                        graphics.FillRectangle(brush, rect);
-                }
-                graphics.AddToPageForeground(result.Page);
+            using var graphics = processor.CreateGraphicsPageSystem();
+            using var brush = new DXSolidBrush(Color.FromArgb(130, 55, 155, 255));
+            foreach (var rect in result.Rectangles) {
+                var fillRectangle = new RectangleF((float)rect.Left,
+                    (float)rect.Top - (float)rect.Height,
+                    (float)rect.Width,
+                    (float)rect.Height);
+                graphics.FillRectangle(brush, fillRectangle);
             }
+            graphics.AddToPageForeground(result.Page);
         }
 
         //This method uses annotations to highlight text
